@@ -23,9 +23,40 @@ Cuando un conjunto de usuarios consulta un enésimo número (superior a 1000000)
 
 ![](images/part3/part3-function-configii.png)
 
+- Escogemos la opción de consumo
+
+<p align="center">
+<img src="images/img/1.png" alt="" width="700px">
+</p>
+
+- Seleccionamos las opciones anteriores.
+<p align="center">
+<img src="images/img/2.png" alt="" width="700px">
+</p>
+
 2. Instale la extensión de **Azure Functions** para Visual Studio Code.
 
 ![](images/part3/part3-install-extension.png)
+
+- Descargamos la extensión en VisualStudioCode
+<p align="center">
+<img src="images/img/3.png" alt="" width="700px">
+</p>
+
+- Descargamos la extensión Azure Account
+<p align="center">
+<img src="images/img/4.png" alt="" width="700px">
+</p>
+
+- Cambiamos la versión en el Host.json
+<p align="center">
+<img src="images/img/5.png" alt="" width="700px">
+</p>
+
+- Si nos dirijimos al portal de azure observamos este error
+<p align="center">
+<img src="images/img/6.png" alt="" width="700px">
+</p>
 
 3. Despliegue la Function de Fibonacci a Azure usando Visual Studio Code. La primera vez que lo haga se le va a pedir autenticarse, siga las instrucciones.
 
