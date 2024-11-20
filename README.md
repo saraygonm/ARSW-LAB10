@@ -64,9 +64,20 @@ Cuando un conjunto de usuarios consulta un enésimo número (superior a 1000000)
 
 ![](images/part3/part3-deploy-function-2.png)
 
+- Realizado:
+<p align="center">
+<img src="images/img/deploy.png" alt="" width="700px">
+</p>
+
 4. Dirijase al portal de Azure y pruebe la function.
 
 ![](images/part3/part3-test-function.png)
+
+- Observamos que se ha conectado exitosamente!:
+<p align="center">
+<img src="images/img/7.png" alt="" width="700px">
+</p>
+
 
 5. Modifique la coleción de POSTMAN con NEWMAN de tal forma que pueda enviar 10 peticiones concurrentes. Verifique los resultados y presente un informe.
 
@@ -74,11 +85,76 @@ Cuando un conjunto de usuarios consulta un enésimo número (superior a 1000000)
 
 ❓**Preguntas**
 
-* ¿Qué es un Azure Function?
-* ¿Qué es serverless?
-* ¿Qué es el runtime y que implica seleccionarlo al momento de crear el Function App?
-* ¿Por qué es necesario crear un Storage Account de la mano de un Function App?
-* ¿Cuáles son los tipos de planes para un Function App?, ¿En qué se diferencias?, mencione ventajas y desventajas de cada uno de ellos.
-* ¿Por qué la memoization falla o no funciona de forma correcta?
-* ¿Cómo funciona el sistema de facturación de las Function App?
+### 1. ¿Qué es un Azure Function?
+Es un servicio de Microsoft Azure que permite ejecutar pequeñas piezas de código (funciones) 
+en respuesta a eventos, sin necesidad de administrar infraestructura y 
+ofreciendo una solución escalable para ejecutar lógica basada en eventos.
+
+---
+
+### 2. ¿Qué es serverless?
+Serverless es un modelo de computación en la nube donde el proveedor administra la infraestructura. 
+Los desarrolladores se enfocan solo en escribir y desplegar código, y la nube escala automáticamente los recursos
+según la demanda. Aunque los servidores existen, son abstractos para el usuario.
+
+---
+
+### 3. ¿Qué es el runtime y qué implica seleccionarlo al momento de crear el Function App?
+El runtime es el entorno de ejecución que interpreta y ejecuta el código de las funciones. 
+
+Las implicaciones de su selección son:
+
+- El lenguaje de programación (C#, Python, Node.js, etc.).
+- Las versiones compatibles.
+- La base para actualizar, mantener y ejecutar las funciones.
+
+
+---
+
+### 4. ¿Por qué es necesario crear un Storage Account junto con un Function App?
+El Storage Account es una dependencia necesaria para el correcto funcionamiento de las Azure Functionses, pues ayuda a:
+- Almacenar datos de configuración y estado de las funciones.
+- Mantiener los archivos de registro y las colas de mensajes para triggers.
+- Soportar la ejecución en modo Durable Functions (persistencia de estado).
+
+.
+
+---
+
+### 5. ¿Cuáles son los tipos de planes para un Function App?
+
+#### 1. **Plan de Consumo:**
+- **Características**: Escala automáticamente en función de la demanda; pagas solo por el tiempo de ejecución.
+- **Ventajas**: Bajo costo inicial, ideal para cargas variables.
+- **Desventajas**: Latencia inicial (cold start), límite de ejecución de 5 minutos.
+
+#### 2. **Plan Premium:**
+- **Características**: Precalentamiento de instancias, mayor escalabilidad y acceso a redes privadas.
+- **Ventajas**: Sin cold start, más rendimiento.
+- **Desventajas**: Más caro que el plan de consumo.
+
+#### 3. **Plan App Service:**
+- **Características**: Usa instancias dedicadas compartidas con otras aplicaciones App Service.
+- **Ventajas**: Control total sobre la infraestructura, ideal para aplicaciones siempre activas.
+- **Desventajas**: No escala automáticamente, costos más altos para cargas variables.
+
+---
+
+### 6. ¿Por qué la memoization falla o no funciona de forma correcta?
+La memoization puede fallar porque:
+- **Persistencia en ambiente stateless**: Azure Functions se ejecutan en un entorno sin estado, y el almacenamiento en memoria se pierde entre ejecuciones.
+- **Inconsistencias en el escalado**: Al escalar horizontalmente, múltiples instancias no comparten la misma memoria.
+- **Errores en la implementación**: Pueden surgir problemas si no se manejan adecuadamente las claves o el almacenamiento del resultado.
+
+---
+
+### 7. ¿Cómo funciona el sistema de facturación de las Function App?
+La facturación se basa en:
+1. **Tiempo de ejecución**: Se mide en segundos y en unidades de GB-s (memoria consumida por segundo).
+2. **Número de ejecuciones**: Se cobra según la cantidad de ejecuciones realizadas.
+
+3. **Almacenamiento y networking**: Costo adicional por el uso del Storage Account y el tráfico de red.
+
+El plan de Consumo incluye una capa gratuita con 1 millón de ejecuciones y 400,000 GB-s al mes.
+
 * Informe
