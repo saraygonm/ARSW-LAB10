@@ -78,12 +78,125 @@ Cuando un conjunto de usuarios consulta un enésimo número (superior a 1000000)
 <img src="images/img/7.png" alt="" width="700px">
 </p>
 
+<!-- Creación de tabla para alinear las imágenes lado a lado.-->
+| <img src="images/img/10.jpg" alt="Ejecución Prueba" width="500px"> | <img src="images/img/11.jpg" alt="Respuesta de la prueba" width="500px"> |
+|---------------------------------------------------------------------|---------------------------------------------------------------|
+| **Imagen 1: Ejecución Prueba**                                        | **Imagen 2: Respuesta prueba**                               |
+
+
 
 5. Modifique la coleción de POSTMAN con NEWMAN de tal forma que pueda enviar 10 peticiones concurrentes. Verifique los resultados y presente un informe.
 
+
+
+    1. **Actualización del valor de `VM1` en el archivo de entorno:**
+   - Se modificó para apuntar a `"functionprojectfibonacci2.azurewebsites.net"`, que corresponde al servicio alojado en Azure.
+    <p align="center">
+    <img src="images/img/12.png" alt="" width="700px">
+    </p>
+
+    2. **Modificación de la solicitud HTTP en el archivo de la colección:**
+   - Cambio del método HTTP: ahora se utiliza `POST`.
+   - Actualización de la URL, el host, y el protocolo: se configuró para usar `https`.
+
+   - Se añadió un cuerpo a la solicitud `POST` en el archivo de la colección, especificando los datos que serán enviados en la petición.
+
+    <p align="center">
+    <img src="images/img/13.png" alt="" width="700px">
+    </p>
+
+  
+
+    3. **Adición de un encabezado:**
+   - Se agregó un encabezado indicando que el contenido del cuerpo de la solicitud estará en formato `JSON`.
+
+
+
+
 6. Cree una nueva Function que resuleva el problema de Fibonacci pero esta vez utilice un enfoque recursivo con memoization. Pruebe la función varias veces, después no haga nada por al menos 5 minutos. Pruebe la función de nuevo con los valores anteriores. ¿Cuál es el comportamiento?.
 
-❓**Preguntas**
+- Para implementar la técnica de memoización, se deben almacenar los resultados previamente calculados para evitar cálculos repetitivos. (Archivo index.js)
+    <p align="center">
+    <img src="images/img/30.png" alt="" width="600px">
+    </p>
+
+- Ahora creamos los archivos de postman, modificando la URL
+
+    <p align="center">
+    <img src="images/img/31.png" alt="" width="600px">
+    </p>
+
+
+# Pruebas y Resultados
+
+## Primeras pruebas  
+
+- Verificar todo funcione: 
+
+<p align="center">
+<img src="images/img/a.png" alt="" width="600px">
+</p>  
+
+En las primeras pruebas realizadas, como se observa en la imagen, todas las solicitudes arrojaron un error **500**, indicando un problema en el servidor. Este fallo podría deberse a la falta de recursos para procesar las peticiones, lo que nos llevó a probar con un valor de `nth` más pequeño.
+
+## Resultados
+
+- **Con `nth = 1000000`**  
+
+<p align="center">
+<img src="images/img/c.png" alt="" width="600px">
+</p>  
+
+- **Con `nth = 10`**  
+<p align="center">
+<img src="images/img/d.png" alt="" width="600px">
+</p>   
+
+Estos resultados nos llevaron a concluir que las peticiones fallan cuando el número solicitado (`nth`) es demasiado grande. Según nuestra investigación, el problema radica en que JavaScript tiene un límite de profundidad en la recursividad de aproximadamente **10,000 llamadas**. Para confirmar esto, realizamos una prueba con `nth = 10,000` usando Newman para evaluar el desempeño del nuevo algoritmo.
+
+## Resultados con `nth = 10,000`  
+<p align="center">
+<img src="images/img/e.png" alt="" width="600px">
+</p>  
+
+El algoritmo funcionó correctamente con este valor, por lo que actualizamos el archivo de entorno en Postman con este nuevo valor de `nth`.
+
+## Pruebas finales en Postman  
+Procedimos a realizar pruebas adicionales en Postman, y los resultados indicaron que todo funcionó de manera correcta.  
+
+<p align="center">
+<img src="images/img/f.png" alt="" width="600px">
+</p>  
+
+<p align="center">
+<img src="images/img/h.png" alt="" width="600px">
+</p>  
+
+
+
+## Observaciones tras varias ejecuciones  
+Al ejecutar el comando repetidamente, observamos en el reporte que la **primera solicitud a la API** es la que tiene el mayor tiempo de respuesta, mientras que las siguientes muestran una mejora considerable en los tiempos de ejecución.
+
+---
+
+# Pruebas después de 5 minutos de inactividad  
+<p align="center">
+<img src="images/img/i.png" alt="" width="600px">
+</p>  
+
+
+Luego de esperar 5 minutos, notamos que el tiempo de respuesta del **primer llamado** a la función aumentó en aproximadamente **200 milisegundos**, alcanzando un tiempo similar al de la primera solicitud realizada en las pruebas iniciales.
+
+Aunque un incremento de 200 milisegundos puede parecer poco, este comportamiento podría explicarse por la **propiedad de "Function Timeout"** en las Function Apps de Azure. Esta característica provoca que, tras un período de inactividad, la memoria asignada al componente sea liberada, lo que obliga al sistema a reinicializarse en la siguiente solicitud, generando un mayor tiempo de respuesta.
+
+---
+
+
+Los resultados confirman que el problema original estaba relacionado con el límite de recursividad de JavaScript y que los tiempos de inicialización adicionales tras un periodo de inactividad son esperados debido a la liberación de memoria en Azure Function Apps.
+
+
+
+## ❓**Preguntas**
 
 ### 1. ¿Qué es un Azure Function?
 Es un servicio de Microsoft Azure que permite ejecutar pequeñas piezas de código (funciones) 
@@ -158,3 +271,46 @@ La facturación se basa en:
 El plan de Consumo incluye una capa gratuita con 1 millón de ejecuciones y 400,000 GB-s al mes.
 
 * Informe
+
+- Comando para enviar 10 peticiones concurrentes:
+
+Ejecutamos el siguiente comando en la terminal para enviar 10 solicitudes concurrentes utilizando Newman (herramienta de línea de comandos para ejecutar colecciones de Postman):
+
+`
+newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10 `
+
+| <img src="images/img/20.jpg" alt="" width="500px"> | <img src="images/img/21.jpg" alt="" width="500px"> |
+|---------------------------------------------------------------------|---------------------------------------------------------------|
+
+
+
+<p align="center">
+<img src="images/img/17.jpg" alt="" width="600px">
+</p>
+
+### Inferencias basadas en los resultados:
+
+#### 1. **Resultados de las solicitudes concurrentes:**
+- Se ejecutaron **10 iteraciones**, todas con éxito.
+- Cada iteración corresponde a una solicitud `POST` hacia la URL.
+- Tiempo promedio de respuesta: **12.4 segundos**.
+  - Tiempo mínimo: **12.2 segundos**.
+  - Tiempo máximo: **13.2 segundos**.
+- Todas las solicitudes obtuvieron un código de estado **200 OK**, indicando que fueron procesadas correctamente por el servidor.
+
+#### 2. **Resumen de desempeño:**
+- **Duración total de ejecución:** Aproximadamente **2 minutos y 5.5 segundos**.
+- **Datos recibidos:** Un total de **2.09 MB**, lo que implica que cada respuesta contenía aproximadamente **209.23 KB**.
+
+#### 3. **Variabilidad en el tiempo de respuesta:**
+- La desviación estándar del tiempo de respuesta fue de **272 ms**, mostrando consistencia en los tiempos de respuesta del servidor.
+
+#### 4. **Servidor y balanceo de carga:**
+- Todas las solicitudes fueron procesadas exitosamente, lo que sugiere que el servidor o el sistema de balanceo de carga está manejando eficientemente esta carga moderada (10 solicitudes concurrentes).
+- No hubo errores ni solicitudes fallidas.
+
+#### 5. **Conclusión:**
+- El servicio es **estable bajo esta carga moderada**.
+- Sin embargo, el tiempo promedio de respuesta (**12.4 segundos**) podría ser elevado dependiendo del contexto de uso. 
+  - Si el cálculo de Fibonacci requiere manejar valores grandes, este tiempo podría ser razonable.
+  - Si no, sería conveniente optimizar el servicio para mejorar su rendimiento.
